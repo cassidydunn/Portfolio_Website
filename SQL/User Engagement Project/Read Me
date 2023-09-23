@@ -4,3 +4,8 @@ Case Study Link: https://mode.com/sql-tutorial/a-drop-in-user-engagement/
 Used: Mode Studio
 
 The Problem: There is a dip in our engaged users and we need to figure out why.
+
+The Solution: SQL Queries show exploration and that it appears the drop comes through the click through rates on the emails and possibly has something to do with mobile devices.
+
+Next Steps: I would present this information with the suggestion to meet with those teams to find the issue further. Even though the data led us to where the problem is, we still don't know exactly why it is happening like this. 
+
