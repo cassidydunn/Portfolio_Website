@@ -1,0 +1,134 @@
+--first viewing the data to understand
+select * from tutorial.yammer_users
+
+--looking to see new users more specifically based on day
+select date_trunc('day', created_at) as Day, 
+  count(*) as "All Users", 
+  count(case when activated_at is not null then user_id else null end) as "Activated Users"
+from tutorial.yammer_users
+where created_at between '2014-06-01' and '2014-09-01'
+group by 1
+order by 1
+--we can see that this is not related to new users then but actually users we already have (put in a line chart)
+
+
+--so now looking at the activity with users we currently have, setting up to view in chart
+
+select date_trunc('week',z.occurred_at) as week, count(distinct user_id) as "Total Users",
+count(distinct case when z.user_age >= 70 then z.user_id else null end) as "10+ Weeks",
+count(distinct case when z.user_age < 70 and z.user_age >= 63 then z.user_id else null end) as "9 Weeks",
+count(distinct case when z.user_age < 63 and z.user_age >= 56 then z.user_id else null end) as "8 Weeks",
+count(distinct case when z.user_age < 56 and z.user_age >= 49 then z.user_id else null end) as "7 Weeks",
+count(distinct case when z.user_age < 49 and z.user_age >= 42 then z.user_id else null end) as "6 Weeks",
+count(distinct case when z.user_age < 42 and z.user_age >= 35 then z.user_id else null end) as "5 Weeks",
+count(distinct case when z.user_age < 35 and z.user_age >= 28 then z.user_id else null end) as "4 Weeks",
+count(distinct case when z.user_age < 28 and z.user_age >= 21 then z.user_id else null end) as "3 Weeks",
+count(distinct case when z.user_age < 21 and z.user_age >= 14 then z.user_id else null end) as "2 Weeks",
+count(distinct case when z.user_age < 14 and z.user_age >= 7 then z.user_id else null end) as "1 Week",
+count(distinct case when z.user_age < 7 then z.user_id else null end) as "Less than a Week"
+
+from 
+(select u.user_id, e.occurred_at, EXTRACT('day' from '2014-09-01'::TIMESTAMP - u.activated_at) as user_age
+from tutorial.yammer_users u 
+join tutorial.yammer_events e 
+on u.user_id = e.user_id
+and e.event_type = 'engagement'
+and e.event_name = 'login'
+and e.occurred_at between '2014-05-01' and '2014-09-01'
+where u.activated_at is not null) z
+group by 1
+-- nothing stands out, but there is a decrease in engagment with users that signed up more than 10 weeks before
+
+
+--so now will look at certain devices if maybe it is effecting traffic
+select date_trunc('week', occurred_at) as week,
+count(distinct user_id) as "Total Users",
+count(distinct case when device in ('macbook_pro', 'lenovo thinkpad', 'macbook air', 'dell inspiration notebook', 'asus chromebook', 'dell inspiron desktop', 'acer aspire notebook', 'hp pavilion desktop', 'mac mini') then user_id else null end) as desktop,
+count(distinct case when device in ('ipad air', 'nexus 7', 'ipad mini', 'nexus 10', 'kindle fire', 'windows surface', 'samsung galaxy tablet') then user_id else null end) as tablet,
+count(distinct case when device in ('iphone 5', 'samsung galaxy s4', 'nexus 5', 'iphone 5s', 'iphone 4s', 'nokia lumia 635', 'htc one', 'samsung galaxy note', 'amazon fire phone') then user_id else null end) as mobile
+
+from tutorial.yammer_events
+where event_type = 'engagement'
+and event_name = 'login'
+and occurred_at between '2014-05-01' and '2014-09-01'
+group by 1
+order by 1
+-- doesn't seem to be related to one specific one, but mobile does have an effect
+
+
+--then going to dive into emails
+select date_trunc('week', occurred_at) as week,
+count(case when action = 'sent_weekly_digest' then user_id else null end) as "Weekly Digest Emails",
+count (case when action = 'sent_reengagement_email' then user_id else null end) as "Reengagemetn Emails",
+count (case when action = 'email_clickthrough' then user_id else null end) as "Email Click Throughs",
+count (case when action = 'email_open' then user_id else null end) as "Email Opens"
+
+from tutorial.yammer_emails
+where occurred_at between '2014-05-01' and '2014-09-01'
+group by 1
+order by 1
+--seems like email click throughs is going down and having an effect
+
+
+--how are clickthroughts effecting it?
+select e1.user_id, e1.action as "Email Sent", e1.occurred_at as "Sent At", e2.action as "Is Opened", e2.occurred_at as "Opened At",  e3.action as "Is Clicked", e3.occurred_at as "Clicked At"
+
+from tutorial.yammer_emails e1
+
+
+left join tutorial.yammer_emails e2
+on e2.occurred_at > e1.occurred_at 
+and e2.occurred_at < e1.occurred_at + interval '5 MINUTE'
+and e2.action = 'email_open'
+and e2.user_id = e1.user_id
+
+
+left join tutorial.yammer_emails e3
+on e3.occurred_at > e2.occurred_at 
+and e3.occurred_at < e2.occurred_at + interval '5 MINUTE'
+and e3.action = 'email_clickthrough'
+and e3.user_id = e2.user_id
+
+where e1.action in ('sent_weekly_digest', 'sent_reengagement_email')
+and e1.occurred_at between '2014-05-01' and '2014-09-01'
+
+
+
+--consolidating for our graph
+
+select week, 
+weekly_opens/case when weekly_emails = 0 then 1 else weekly_emails END::FLOAT as "Weekly Open Rate",
+weekly_clickthroughs/case when weekly_opens = 0 then 1 else weekly_opens END::FLOAT as "Weekly Click Through Rate",
+retain_opens/case when retain_emails = 0 then 1 else retain_emails END::FLOAT as "Retain Open Rate",
+retain_clickthroughs/case when retain_opens = 0 then 1 else retain_opens END::FLOAT as "Retain Click Through Rate"
+
+from
+(select date_trunc('week', e1.occurred_at) as week, 
+  count(case when e1.action = 'sent_weekly_digest' then e1.user_id else null end) as weekly_emails,
+  count(case when e1.action = 'sent_weekly_digest' then e2.user_id else null end) as weekly_opens,
+  count(case when e1.action = 'sent_weekly_digest' then e3.user_id else null end) as weekly_clickthroughs,
+  count(case when e1.action = 'sent_reengagement_email' then e1.user_id else null end) as retain_emails,
+  count(case when e1.action = 'sent_reengagement_email' then e2.user_id else null end) as retain_opens,
+  count(case when e1.action = 'sent_reengagement_email' then e3.user_id else null end) as retain_clickthroughs
+
+from tutorial.yammer_emails e1
+
+left join tutorial.yammer_emails e2
+on e2.occurred_at >= e1.occurred_at 
+and e2.occurred_at < e1.occurred_at + INTERVAL '5 MINUTE'
+and e2.action = 'email_open'
+and e2.user_id = e1.user_id
+
+
+left join tutorial.yammer_emails e3
+on e3.occurred_at >= e2.occurred_at 
+and e3.occurred_at < e2.occurred_at + INTERVAL '5 MINUTE'
+and e3.action = 'email_clickthrough'
+and e3.user_id = e2.user_id
+
+where e1.action in ('sent_weekly_digest', 'sent_reengagement_email')
+and e1.occurred_at between '2014-05-01' and '2014-09-01'
+
+group by 1 ) a 
+order by 1
+--with visualization can see that smething is happening with the emails and the drop - specifically digest emails
