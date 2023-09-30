@@ -1,10 +1,10 @@
 # Welcome to my Portfolio!
 
-A Bit About Me:
+## A Bit About Me:
 - Bachelor's Degree in Business Data Science and Minor in Data Analytics
 - Master's Degree in Business Administration
 - Certificate in Data Analytics
-- 2.5 years of experience data through various companies and projects
+- 2.5 years of experience with data through various companies and projects
 - Currently looking for a data science position or data analyst role
 - Very eager to learn and help make a difference in a company
 - Strong Leadership Skills
@@ -13,11 +13,13 @@ A Bit About Me:
 
 
 
-##Learn More About Me!
-[Linked In](https://www.linkedin.com/in/cassidyrdunn/)
-[Personal Website](https://cassidycrd.weebly.com/)
+# Learn More About Me!
+✔️  [Linked In](https://www.linkedin.com/in/cassidyrdunn/)
+💻  [Personal Website](https://cassidycrd.weebly.com/)
 
-##Feel Free to Contact Me at
-📫 cassidycrd@gmail.com
+### Please Contact Me at
+📫  cassidycrd@gmail.com
 
-![IMG-8335 (2)](https://github.com/cassidydunn/Portfolio_Website/assets/102692236/a09f589f-e0b5-4dcc-8c3c-9ec741ba26cc)
+
+ 
+![IMG-8335 (2)](https://github.com/cassidydunn/Portfolio_Website/assets/102692236/8de30416-bbca-4390-9883-e4203fa320ae)
