@@ -1,17 +1,10 @@
-'**'Project Completed through my previous role at Webstaurant Store'**'
+Project Completed through my previous role at Webstaurant Store
 
 Note that some data is not shown in the output for privacy of the company and some comments are added in specifically for this upload.
 Used: Python and Jupyter Notebook
 
-The Problem: We wanted to see if there was a way to easily see the negative reviews. Currently, a team went through each one based on star ratings to see if it was there was a negative review and for them to respond.
-My project not only looked at if there was a way to find these reviews more easily, but also if people would give a positive or negative star rating and then give the opposite in a review. 
+The Problem: We wanted to see if there was a way to easily see the negative reviews. Currently, a team went through each one based on star ratings to see if it was there was a negative review and for them to respond.My project not only looked at if there was a way to find these reviews more easily, but also if people would give a positive or negative star rating and then give the opposite in a review. 
 
-The Solution: I started with exploratory data analysis to see what my data looked like. I only used a sample of 2,500 reviews since there are so many on the website and had an equal amount to look at. This dataset was 
-pulled from SQL. I went through different functions and models until I found what was best. We found that even though someone might leave a positive star rating, it doesn't mean they left a positive review. This model 
-gave the opportunity to spot these without reading every single review to save time. We also found what are the most common words for positive or negative reviews. Later, we can take this a step further and look at all 
-of the reviews for just one product and see the most common. If it is something like "broken" maybe there is something that needs to be done with that product on the site. This model opens a lot of new doors for the 
-company. We can now more easily point out where negative reviews are based on the words of customers and not just what star they are giving. This allows us to reach out if something is wrong even if they gave a 4 star
-review.
+The Solution: I started with exploratory data analysis to see what my data looked like. I only used a sample of 2,500 reviews since there are so many on the website and had an equal amount to look at. This dataset was pulled from SQL. I went through different functions and models until I found what was best. We found that even though someone might leave a positive star rating, it doesn't mean they left a positive review. This model gave the opportunity to spot these without reading every single review to save time. We also found what are the most common words for positive or negative reviews. Later, we can take this a step further and look at all of the reviews for just one product and see the most common. If it is something like "broken" maybe there is something that needs to be done with that product on the site. This model opens a lot of new doors for the company. We can now more easily point out where negative reviews are based on the words of customers and not just what star they are giving. This allows us to reach out if something is wrong even if they gave a 4 star review.
 
-Next Steps: I shared the final results in a presentation with my team and later met with the team that works with this data. I worked directly with someone who also was analyzing these reviews and we consolidated our 
-projects. Unfortunately I left before seeing the project actually go into production. 
+Next Steps: I shared the final results in a presentation with my team and later met with the team that works with this data. I worked directly with someone who also was analyzing these reviews and we consolidated our projects. Unfortunately I left before seeing the project actually go into production. 
